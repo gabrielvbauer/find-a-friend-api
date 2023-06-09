@@ -46,8 +46,8 @@ model Org {
   state            String
   email            String
   password_hash    String
-  latitude         String
-  longitude        String
+  latitude         Decimal
+  longitude        Decimal
   created_at       DateTime @default(now())
   role             Role     @default(ORG)
 

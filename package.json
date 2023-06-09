@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src --ext .ts --fix",
-    "start:dev": "tsx watch src/server.ts"
+    "start:dev": "tsx watch src/server.ts",
+    "test": "vitest run --dir src/use-cases",
+    "test:watch": "vitest --dir src/use-cases"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +18,14 @@
     "eslint": "8.42.0",
     "prisma": "4.15.0",
     "tsx": "3.12.7",
-    "typescript": "5.1.3"
+    "typescript": "5.1.3",
+    "vite-tsconfig-paths": "4.2.0",
+    "vitest": "0.32.0"
   },
   "dependencies": {
     "@prisma/client": "4.15.0",
+    "@types/bcryptjs": "2.4.2",
+    "bcryptjs": "2.4.3",
     "fastify": "4.17.0"
   }
 }
