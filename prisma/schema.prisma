@@ -44,7 +44,7 @@ model Org {
   city             String
   cep              String
   state            String
-  email            String
+  email            String   @unique
   password_hash    String
   latitude         Decimal
   longitude        Decimal
