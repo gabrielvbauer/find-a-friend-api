@@ -48,4 +48,14 @@ export class InMemoryOrgsRepository implements OrgsRepository {
 
     return org
   }
+
+  async fetchByCityCode(cityCode: string): Promise<Org[] | null> {
+    const orgs = this.items.filter((org) => org.cep === cityCode)
+
+    if (!orgs) {
+      return null
+    }
+
+    return orgs
+  }
 }

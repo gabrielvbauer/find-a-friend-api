@@ -3,7 +3,7 @@ import { PetsRepository } from '../pets-repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryPetsRepository implements PetsRepository {
-  private items: Pet[] = []
+  public items: Pet[] = []
 
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
     const picturesArray = data.pictures
@@ -31,5 +31,15 @@ export class InMemoryPetsRepository implements PetsRepository {
     this.items.push(pet)
 
     return pet
+  }
+
+  async fetchByOrgId(orgId: string): Promise<Pet[] | null> {
+    const pets = this.items.filter((pet) => pet.org_id === orgId)
+
+    if (!pets) {
+      return null
+    }
+
+    return pets
   }
 }
