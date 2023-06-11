@@ -6,12 +6,10 @@ export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
 
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
-    const picturesArray = data.pictures
-      ? data.pictures?.toString().split(',')
-      : ['']
+    const picturesArray = data.pictures?.toString().split(',')!
     const adoptionRequirementsArray = data.adoption_requirements
-      ? data.adoption_requirements?.toString().split(',')
-      : ['']
+      ?.toString()
+      .split(',')!
 
     const pet = {
       id: randomUUID(),
@@ -58,10 +56,6 @@ export class InMemoryPetsRepository implements PetsRepository {
           matchType
         )
       })
-    }
-
-    if (!pets) {
-      return null
     }
 
     return pets

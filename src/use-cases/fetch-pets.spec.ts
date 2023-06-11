@@ -189,6 +189,11 @@ describe('Fetch Pets By City Use Case', () => {
     ).rejects.toBeInstanceOf(CityCodeNotSpecifiedError)
   })
 
+  it('should return an empty array if specified city has no orgs', async () => {
+    const { pets } = await sut.execute({ cityCode: 'city-code-with-no-orgs' })
+    expect(pets).toEqual([])
+  })
+
   it('should be able to fetch by applying filters', async () => {
     orgsRepository.items.push({
       id: 'org1',
@@ -253,11 +258,30 @@ describe('Fetch Pets By City Use Case', () => {
       pictures: [''],
     })
 
+    petsRepository.items.push({
+      id: '101',
+      name: 'pet 4',
+      org_id: 'org1',
+      bio: '',
+      type: 'CAT',
+      age: 'CUB',
+      port: 'SMALL',
+      energy: 'MEDIUM',
+      dependency: 'SMALL',
+      ambient: 'SMALL',
+      adoption_requirements: [''],
+      pictures: [''],
+    })
+
     const { pets } = await sut.execute({
       cityCode: '98700000',
       query: {
         age: 'CUB',
         energy: 'MEDIUM',
+        ambient: 'SMALL',
+        dependency: 'SMALL',
+        port: 'SMALL',
+        type: 'CAT',
       },
     })
 
