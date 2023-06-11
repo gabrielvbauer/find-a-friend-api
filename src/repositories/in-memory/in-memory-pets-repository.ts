@@ -1,5 +1,5 @@
 import { Pet, Prisma } from '@prisma/client'
-import { PetsRepository } from '../pets-repository'
+import { FetchPetsQuery, PetsRepository } from '../pets-repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryPetsRepository implements PetsRepository {
@@ -33,8 +33,32 @@ export class InMemoryPetsRepository implements PetsRepository {
     return pet
   }
 
-  async fetchByOrgId(orgId: string): Promise<Pet[] | null> {
-    const pets = this.items.filter((pet) => pet.org_id === orgId)
+  async fetchByOrgId(
+    orgId: string,
+    query?: FetchPetsQuery,
+  ): Promise<Pet[] | null> {
+    let pets = this.items.filter((pet) => pet.org_id === orgId)
+
+    if (query) {
+      pets = pets.filter((pet) => {
+        const matchAge = !query.age || pet.age === query.age
+        const matchAmbient = !query.ambient || pet.ambient === query.ambient
+        const matchDependecy =
+          !query.dependency || pet.dependency === query.dependency
+        const matchEnergy = !query.energy || pet.energy === query.energy
+        const matchPort = !query.port || pet.port === query.port
+        const matchType = !query.type || pet.type === query.type
+
+        return (
+          matchAge &&
+          matchAmbient &&
+          matchDependecy &&
+          matchEnergy &&
+          matchPort &&
+          matchType
+        )
+      })
+    }
 
     if (!pets) {
       return null

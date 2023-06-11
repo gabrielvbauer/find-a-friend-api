@@ -1,17 +1,18 @@
 import { OrgsRepository } from '@/repositories/orgs-repository'
-import { PetsRepository } from '@/repositories/pets-repository'
+import { FetchPetsQuery, PetsRepository } from '@/repositories/pets-repository'
 import { Pet } from '@prisma/client'
 import { CityCodeNotSpecifiedError } from './errors/city-code-not-specified-error'
 
 interface FetchPetsByCityUseCaseRequest {
   cityCode: string
+  query?: FetchPetsQuery
 }
 
 interface FetchPetsByCityUseCaseResponse {
   pets: Pet[]
 }
 
-export class FetchPetsByCityUseCase {
+export class FetchPetsUseCase {
   constructor(
     private orgRepository: OrgsRepository,
     private petsRepository: PetsRepository,
@@ -19,6 +20,7 @@ export class FetchPetsByCityUseCase {
 
   async execute({
     cityCode,
+    query,
   }: FetchPetsByCityUseCaseRequest): Promise<FetchPetsByCityUseCaseResponse> {
     if (!cityCode) {
       throw new CityCodeNotSpecifiedError()
@@ -33,7 +35,10 @@ export class FetchPetsByCityUseCase {
     const pets: Pet[] = []
 
     orgsInCity.forEach(async (org) => {
-      const petsInsideOrg = await this.petsRepository.fetchByOrgId(org.id)
+      const petsInsideOrg = await this.petsRepository.fetchByOrgId(
+        org.id,
+        query,
+      )
 
       if (petsInsideOrg !== null) {
         petsInsideOrg.forEach((pet) => pets.push(pet))

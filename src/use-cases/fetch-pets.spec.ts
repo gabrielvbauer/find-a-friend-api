@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect } from 'vitest'
-import { FetchPetsByCityUseCase } from './fetch-pets-by-city'
+import { FetchPetsUseCase } from './fetch-pets'
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { Prisma } from '@prisma/client'
@@ -7,13 +7,13 @@ import { CityCodeNotSpecifiedError } from './errors/city-code-not-specified-erro
 
 let orgsRepository: InMemoryOrgsRepository
 let petsRepository: InMemoryPetsRepository
-let sut: FetchPetsByCityUseCase
+let sut: FetchPetsUseCase
 
 describe('Fetch Pets By City Use Case', () => {
   beforeEach(() => {
     orgsRepository = new InMemoryOrgsRepository()
     petsRepository = new InMemoryPetsRepository()
-    sut = new FetchPetsByCityUseCase(orgsRepository, petsRepository)
+    sut = new FetchPetsUseCase(orgsRepository, petsRepository)
   })
 
   it('should be able to fetch pets for adoption in city', async () => {
@@ -187,5 +187,80 @@ describe('Fetch Pets By City Use Case', () => {
     await expect(() =>
       sut.execute({ cityCode: undefined! }),
     ).rejects.toBeInstanceOf(CityCodeNotSpecifiedError)
+  })
+
+  it('should be able to fetch by applying filters', async () => {
+    orgsRepository.items.push({
+      id: 'org1',
+      cep: '98700000',
+      responsible_name: '',
+      name: '',
+      description: '',
+      phone: '',
+      street_address: '',
+      city: '',
+      state: '',
+      email: '',
+      password_hash: '',
+      latitude: new Prisma.Decimal(0),
+      longitude: new Prisma.Decimal(0),
+      created_at: new Date(),
+      role: 'ORG',
+    })
+
+    petsRepository.items.push({
+      id: '123',
+      name: 'pet 1',
+      org_id: 'org1',
+      bio: '',
+      type: 'CAT',
+      age: 'ADULT',
+      port: 'SMALL',
+      energy: 'MEDIUM',
+      dependency: 'SMALL',
+      ambient: 'SMALL',
+      adoption_requirements: [''],
+      pictures: [''],
+    })
+
+    petsRepository.items.push({
+      id: '456',
+      name: 'pet 2',
+      org_id: 'org1',
+      bio: '',
+      type: 'CAT',
+      age: 'CUB',
+      port: 'MEDIUM',
+      energy: 'LOW',
+      dependency: 'HIGH',
+      ambient: 'MEDIUM',
+      adoption_requirements: [''],
+      pictures: [''],
+    })
+
+    petsRepository.items.push({
+      id: '789',
+      name: 'pet 3',
+      org_id: 'org1',
+      bio: '',
+      type: 'DOG',
+      age: 'CUB',
+      port: 'SMALL',
+      energy: 'MEDIUM',
+      dependency: 'HIGH',
+      ambient: 'SMALL',
+      adoption_requirements: [''],
+      pictures: [''],
+    })
+
+    const { pets } = await sut.execute({
+      cityCode: '98700000',
+      query: {
+        age: 'CUB',
+        energy: 'MEDIUM',
+      },
+    })
+
+    expect(pets).toHaveLength(1)
   })
 })
