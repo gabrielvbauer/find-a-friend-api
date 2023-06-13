@@ -32,18 +32,17 @@ export class FetchPetsUseCase {
       return { pets: [] }
     }
 
-    const pets: Pet[] = []
+    let pets: Pet[] = []
 
-    orgsInCity.forEach(async (org) => {
-      const petsInsideOrg = await this.petsRepository.fetchByOrgId(
-        org.id,
-        query,
-      )
-
-      if (petsInsideOrg !== null) {
-        petsInsideOrg.forEach((pet) => pets.push(pet))
-      }
-    })
+    await Promise.all(
+      orgsInCity.map(async (org) => {
+        const petsFromOrg = await this.petsRepository.fetchByOrgId(
+          org.id,
+          query,
+        )
+        pets = [...pets, ...petsFromOrg]
+      }),
+    )
 
     return { pets }
   }

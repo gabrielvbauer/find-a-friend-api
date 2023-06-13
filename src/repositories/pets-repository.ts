@@ -11,6 +11,6 @@ export interface FetchPetsQuery {
 
 export interface PetsRepository {
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
-  fetchByOrgId(orgId: string, query?: FetchPetsQuery): Promise<Pet[] | null>
+  fetchByOrgId(orgId: string, query?: FetchPetsQuery): Promise<Pet[]>
   findById(id: string): Promise<Pet | null>
 }
