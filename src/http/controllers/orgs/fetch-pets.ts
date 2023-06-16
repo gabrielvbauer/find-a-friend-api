@@ -7,13 +7,24 @@ export async function fetchPets(request: FastifyRequest, reply: FastifyReply) {
     cityCode: z.string(),
   })
 
+  const fetchPetsQuerySchema = z.object({
+    age: z.string().optional(),
+    energy: z.string().optional(),
+    ambient: z.string().optional(),
+    dependency: z.string().optional(),
+    port: z.string().optional(),
+    type: z.string().optional(),
+  })
+
   const { cityCode } = fetchPetsParamsSchema.parse(request.params)
+  const query = fetchPetsQuerySchema.parse(request.query)
 
   const fetchPetsUseCase = makeFetchPetsUseCase()
 
   try {
     const { pets } = await fetchPetsUseCase.execute({
       cityCode,
+      query,
     })
 
     return reply.status(200).send({ pets })

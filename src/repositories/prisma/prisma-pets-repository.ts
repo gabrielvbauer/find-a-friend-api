@@ -18,6 +18,12 @@ export class PrismaPetsRepository implements PetsRepository {
     const pets = await prisma.pet.findMany({
       where: {
         org_id: orgId,
+        age: query?.age,
+        energy: query?.energy,
+        dependency: query?.dependency,
+        ambient: query?.ambient,
+        port: query?.port,
+        type: query?.type,
       },
     })
 

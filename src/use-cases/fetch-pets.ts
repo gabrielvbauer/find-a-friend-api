@@ -16,7 +16,7 @@ export class FetchPetsUseCase {
   constructor(
     private orgRepository: OrgsRepository,
     private petsRepository: PetsRepository,
-  ) {}
+  ) { }
 
   async execute({
     cityCode,

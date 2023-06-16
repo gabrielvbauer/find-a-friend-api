@@ -16,15 +16,15 @@ enum Role {
 }
 
 model Pet {
-  id                    String         @unique @default(uuid())
+  id                    String   @unique @default(uuid())
   name                  String
   bio                   String
-  type                  PetType
-  age                   PetAge
-  port                  PetPort
-  energy                PetEnergyLevel
-  dependency            PetDependency
-  ambient               PetAmbient
+  type                  String
+  age                   String
+  port                  String
+  energy                String
+  dependency            String
+  ambient               String
   adoption_requirements String[]
   pictures              String[]
 
@@ -54,39 +54,4 @@ model Org {
   Pet Pet[]
 
   @@map("orgs")
-}
-
-enum PetAge {
-  CUB
-  ADULT
-  ELDER
-}
-
-enum PetPort {
-  SMALL
-  MEDIUM
-  BIG
-}
-
-enum PetEnergyLevel {
-  LOW
-  MEDIUM
-  HIGH
-}
-
-enum PetDependency {
-  SMALL
-  MEDIUM
-  HIGH
-}
-
-enum PetAmbient {
-  SMALL
-  MEDIUM
-  BIG
-}
-
-enum PetType {
-  CAT
-  DOG
 }
